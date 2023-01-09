@@ -56,6 +56,25 @@ bool subAccountAddRecord(subAccount *subAcc, record rec) {
   return (vectorPushBack(subAcc->records, recPtr) == SUCCESS);
 }
 
+
+void fprintAccount(FILE *stream, account *acc) {
+  fprintf(stream, "Name: %s\n", acc->name);
+  fprintf(stream, "Number: %d\n", acc->number);
+  fprintf(stream, "Date: %s\n", acc->date);
+
+  for (size_t i = 0; i < vectorSize(acc->subAccounts); i++) {
+    subAccount *subAcc = (subAccount *)vectorGet(acc->subAccounts, i);
+    fprintf(stream, "Sum: %d\n", subAcc->sum);
+
+    for (size_t j = 0; j < vectorSize(subAcc->records); j++) {
+      record *rec = (record *)vectorGet(subAcc->records, j);
+      fprintf(stream, "Procent: %d\n", rec->interest);
+      fprintf(stream, "Duration: %d\n", rec->duration);
+    }
+  }
+}
+
+
 void saveToFile(account *acc, char *filepath) {
   FILE *fptr;
   if ((fptr = fopen(filepath, "w")) == NULL) {
@@ -63,21 +82,7 @@ void saveToFile(account *acc, char *filepath) {
     exit(ERROR_CODE);
   }
 
-  fprintf(fptr, "Name: %s\n", acc->name);
-  fprintf(fptr, "Number: %d\n", acc->number);
-  fprintf(fptr, "Date: %s\n", acc->date);
-
-  for (size_t i = 0; i < vectorSize(acc->subAccounts); i++) {
-    subAccount *subAcc = (subAccount *)vectorGet(acc->subAccounts, i);
-    fprintf(fptr, "Sum: %d\n", subAcc->sum);
-
-    for (size_t j = 0; j < vectorSize(subAcc->records); j++) {
-      record *rec = (record *)vectorGet(subAcc->records, j);
-      fprintf(fptr, "Procent: %d\n", rec->interest);
-      fprintf(fptr, "Duration: %d\n", rec->duration);
-    }
-  }
-
+  fprintAccount(fptr, acc);
 
   fclose(fptr);
 }
