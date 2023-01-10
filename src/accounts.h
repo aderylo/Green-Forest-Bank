@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "memalloc.h"
-#include "utils/parsing.h"
+#include "utils/file.h"
 #include "utils/vector.h"
 
 #ifndef ACCOUNTS_UTILS
@@ -44,6 +44,28 @@ subAccount *initSubAccount(int sum) {
   subAcc->sum = sum;
   subAcc->records = vectorInit();
   return subAcc;
+}
+
+void subAccountDestructor(subAccount *subAcc) {
+  if (subAcc) {
+    for (size_t i = 0; i < vectorSize(subAcc->records); i++) {
+      record *r = (record *)vectorGet(subAcc->records, i);
+      freeIfNotNull(r);
+    }
+
+    free(subAcc);
+  }
+}
+
+void accountDestructor(account *acc) {
+  if (acc) {
+    for (size_t i = 0; i < vectorSize(acc->subAccounts); i++) {
+      subAccountDestructor((subAccount *)vectorGet(acc->subAccounts, i));
+    }
+    freeIfNotNull(acc->date);
+    freeIfNotNull(acc->name);
+    freeIfNotNull(acc);
+  }
 }
 
 bool accountAddSubAccount(account *acc, subAccount *subAcc) {
