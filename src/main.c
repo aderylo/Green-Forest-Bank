@@ -1,21 +1,32 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "display.h"
 
 typedef enum softwareId {
-  display = 2,
-  add = 3,
-  modify = 4,
+  DISPLAY = 2,
+  ADD = 3,
+  MODIFY = 4,
 } softwareId;
 
 void readClientName(char *ptr) {
   // lol
 }
 
-void invokeSoftware(softwareId id, char *clientName) {}
+void invokeSoftware(softwareId id, char *clientName, vector **depositCache, vector **creditCache) {
+  switch (id) {
+    case DISPLAY:
+      loadAndDisplay(clientName, depositCache, creditCache);
+      break;
+    default:
+      break;
+  }
+}
 
 int main() {
   int option = 0;
   char *clientName = NULL;
+  vector *depositCache = vectorInit();
+  vector *creditCache = vectorInit();
 
   while (option != 5) {
     printf(
@@ -32,7 +43,7 @@ int main() {
       readClientName(clientName);
     } else if (option > 1 && option < 5) {
       if (clientName)
-        invokeSoftware(option, clientName);
+        invokeSoftware(option, clientName, &depositCache, &creditCache);
       else
         printf("First you must specify client name, use option (1)\n");
     } else if (option == 5) {

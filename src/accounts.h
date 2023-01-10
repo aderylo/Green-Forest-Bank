@@ -14,17 +14,17 @@ typedef struct account {
   int number;
   char *date;
   vector *subAccounts;
-};
+} account;
 
 typedef struct subAccount {
   int sum;
   vector *records;
-};
+} subAccount;
 
 typedef struct record {
   int interest;
   int duration;
-};
+} record;
 
 
 account *initAccount(char *name, int number, char *date) {
@@ -165,8 +165,10 @@ account *readFromFile(char *filepath) {
           exit(ERROR_CODE);
         }
 
-        if (i % 2 == 0)
-          subAccountAddRecord(subAccount, {.interest = interest, .duration = duration});
+        if (i % 2 == 0) {
+          record r = (record){.interest = interest, .duration = duration};
+          subAccountAddRecord(subAccount, r);
+        }
 
         i++;
       }

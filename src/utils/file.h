@@ -6,6 +6,7 @@
 
 #include <sys/stat.h>
 
+#include <stdbool.h>
 #include <err.h>
 #include <fts.h>
 #include <stdio.h>
