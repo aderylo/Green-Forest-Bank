@@ -8,13 +8,14 @@
 #define CREDIT_PATH "credits"
 #define DEPOSITS_PATH "deposits"
 
-static bool load(char *name, char *dirPath, vector **cache);
 
 bool cleanCache(vector *cache) {
   bool okay = true;
-  for (size_t i = vectorSize(cache) - 1; i > 0; i--) {
-    accountDestructor((account *)vectorGet(cache, i));
-    okay &= (SUCCESS == vectorRemove(cache, i));
+  if (vectorSize(cache) > 0) {
+    for (size_t i = vectorSize(cache) - 1; i > 0; i--) {
+      accountDestructor((account *)vectorGet(cache, i));
+      okay &= (SUCCESS == vectorRemove(cache, i));
+    }
   }
 
   return okay;

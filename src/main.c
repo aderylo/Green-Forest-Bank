@@ -22,6 +22,16 @@ void invokeSoftware(softwareId id, char *clientName, vector **depositCache, vect
   }
 }
 
+void cleanUp(char *str, vector *cacheA, vector *cacheB) {
+  freeIfNotNull(str);
+
+  cleanCache(cacheA);
+  freeIfNotNull(cacheA);
+
+  cleanCache(cacheB);
+  freeIfNotNull(cacheB);
+}
+
 int main() {
   int option = 0;
   char *clientName = NULL;
@@ -42,12 +52,9 @@ int main() {
     if (option == 1) {
       readClientName(clientName);
     } else if (option > 1 && option < 5) {
-      if (clientName)
-        invokeSoftware(option, clientName, &depositCache, &creditCache);
-      else
-        printf("First you must specify client name, use option (1)\n");
+      invokeSoftware(option, clientName, &depositCache, &creditCache);
     } else if (option == 5) {
-      // clear memory
+      cleanUp(clientName, creditCache, depositCache);
       printf("Have a nice day!\n");
     }
   }
