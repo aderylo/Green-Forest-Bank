@@ -1,4 +1,5 @@
 #!bin/bash
 
-mkdir credtis 
-mkdir deposits
+mkdir build 
+mkdir build/credtis 
+mkdir build/deposits
