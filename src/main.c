@@ -2,14 +2,23 @@
 #include <stdlib.h>
 #include "display.h"
 
+#define INIT_BUFFER_SIZE 10
+
 typedef enum softwareId {
   DISPLAY = 2,
   ADD = 3,
   MODIFY = 4,
 } softwareId;
 
-void readClientName(char *ptr) {
-  // lol
+bool readClientName(char **ptr) {
+  freeIfNotNull(*ptr);
+  size_t size = 0;
+  int r;
+
+  printf("Please enter a name: ");
+  r = getline(ptr, &size, stdin);
+
+  return (r != -1);
 }
 
 void invokeSoftware(softwareId id, char *clientName, vector **depositCache, vector **creditCache) {
@@ -34,6 +43,8 @@ void cleanUp(char *str, vector *cacheA, vector *cacheB) {
 
 int main() {
   int option = 0;
+  size_t bufferSize = 0;
+  char *buffer;
   char *clientName = NULL;
   vector *depositCache = vectorInit();
   vector *creditCache = vectorInit();
@@ -47,15 +58,20 @@ int main() {
             (4) Software for modifying the content of deposits and loans.\n \
             (5) Quit.\n");
 
-    scanf("%d", &option);
+    int r = getline(&buffer, &bufferSize, stdin);
+    option = atoi(buffer);
+    freeIfNotNull(buffer);
+    bufferSize = 0;
 
     if (option == 1) {
-      readClientName(clientName);
+      readClientName(&clientName);
     } else if (option > 1 && option < 5) {
       invokeSoftware(option, clientName, &depositCache, &creditCache);
     } else if (option == 5) {
       cleanUp(clientName, creditCache, depositCache);
       printf("Have a nice day!\n");
+    } else {
+      printf("Invalid input!\n");
     }
   }
 
