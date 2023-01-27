@@ -1,23 +1,22 @@
 FROM ubuntu:latest
 
-# Copy necessary files
 COPY . /app
 WORKDIR /app
 
-# Install necessary software
-RUN apt-get update && \
-    apt-get install -y openssh-server python3 python3-pip gunicorn3 nftables && \
-    pip3 install flask && \
-    apt-get clean
-# Configure necessary software
-RUN sed 's/#PasswordAuthentication yes/PasswordAuthentication no/' -i /etc/ssh/sshd_config && \
-    sed 's/PermitRootLogin prohibit-password/PermitRootLogin no/' -i /etc/ssh/sshd_config
+# Install dependencies 
+RUN apt-get update && apt-get install -y openssh-server python3 python3-pip gunicorn supervisor
+RUN pip3 install -r requirements.txt
 
-RUN mkdir -p /run/sshd
+# Create a directory for the ssh server to store its host keys
+RUN mkdir /var/run/sshd
 
-# Run firewall rules
+RUN echo 'root:password' | chpasswd
 
-EXPOSE 22 8000 8001
-CMD ["/usr/sbin/sshd", "-D"]
-# CMD ["gunicorn3", "app:app", "-b", "0.0.0.0:8000"]
+# Allow root login via ssh 
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
+# SSH login fix. Otherwise user is kicked off after login
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+
+EXPOSE 22 8000
+CMD ["/usr/bin/supervisord"]
