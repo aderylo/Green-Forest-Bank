@@ -4,7 +4,7 @@ COPY . /app
 WORKDIR /app
 
 # Install dependencies 
-RUN apt-get update && apt-get install -y openssh-server python3 python3-pip gunicorn supervisor
+RUN apt-get update && apt-get install -y openssh-server python3 python3-pip gunicorn supervisor nftables
 RUN pip3 install -r requirements.txt
 
 # Create a directory for the ssh server to store its host keys
