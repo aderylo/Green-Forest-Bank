@@ -33,9 +33,10 @@ docker build -t app .
 
 To run it: 
 ```
-docker run -p 22:22 -p 8000:8000 app 
+docker run -p 22:22 -p 443:443 app 
 ```
-App will be served on 8000 port and one can connect with root user via ssh root@host. 
+App will be served on 443 port (https://host) and one can connect to a container via ssh in following manner "ssh root@host". 
+For example, to connect with an app from a localhost https://0.0.0.0 should suffice.  
 
 ## Firewall 
 In order to apply firewall rules using nft run following command with root privileges: 
