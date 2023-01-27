@@ -40,6 +40,6 @@ App will be served on 8000 port and one can connect with root user via ssh root@
 ## Firewall 
 In order to apply firewall rules using nft run following command with root privileges: 
 ```
-sudo firewall.sh
+bash sudo firewall.sh
 ```
 
