@@ -12,6 +12,8 @@ RUN mkdir /var/run/sshd
 
 RUN echo 'root:password' | chpasswd
 
+RUN bash setup.sh 
+
 # Allow root login via ssh 
 RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 

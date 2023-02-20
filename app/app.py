@@ -1,15 +1,13 @@
 from pam import pam
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, redirect
 import os
 import logging
 
-
 app = Flask(__name__)
-
 
 @app.route('/')
 def index():
-        return render_template('login.html')
+    return render_template('login.html')
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -17,14 +15,25 @@ def login():
     username = request.form.get('username')
     password = request.form.get('password')
 
-
     print(f"user : {username}") 
-    
+
     # authenticate using PAM
     if pam().authenticate(username, password):
-        return jsonify({"status": "success"})
+        return redirect('/viewer')
     else:
         return jsonify({"status": "failure"}), 401
+
+@app.route('/viewer')
+def viewer():
+    directory = 'credits'
+    filenames = os.listdir(directory)
+    file_contents = {}
+
+    for filename in filenames:
+        with open(os.path.join(directory, filename)) as f:
+            file_contents[filename] = f.readlines()
+
+    return render_template('viewer.html', filenames=filenames, file_contents=file_contents)
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)

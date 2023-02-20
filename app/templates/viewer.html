@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>File Viewer</title>
+</head>
+
+<body>
+    <h1>File Viewer</h1>
+    <ul>
+        {% for filename in filenames %}
+        <li>{{ filename }}:</li>
+        <ul>
+            {% for line in file_contents[filename] %}
+            <li>{{ line }}</li>
+            {% endfor %}
+        </ul>
+        {% endfor %}
+    </ul>
+</body>
+
+</html>
