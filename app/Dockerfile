@@ -10,8 +10,6 @@ RUN pip3 install -r requirements.txt
 # Create a directory for the ssh server to store its host keys
 RUN mkdir /var/run/sshd
 
-RUN echo 'root:password' | chpasswd
-
 RUN bash setup.sh 
 
 # Allow root login via ssh 

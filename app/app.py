@@ -19,13 +19,23 @@ def login():
 
     # authenticate using PAM
     if pam().authenticate(username, password):
-        return redirect('/viewer')
+        return redirect('/view')
     else:
         return jsonify({"status": "failure"}), 401
 
-@app.route('/viewer')
-def viewer():
-    directory = 'credits'
+@app.route('/view')
+def view():
+    return render_template('view.html')
+
+@app.route('/view/credits')
+def credits():
+    return viewer("credits")
+
+@app.route('/view/deposits')
+def deposits():
+    return viewer("deposits")
+
+def viewer(directory : str):
     filenames = os.listdir(directory)
     file_contents = {}
 
