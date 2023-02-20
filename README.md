@@ -39,7 +39,7 @@ App will be served on 443 port (https://host) and one can connect to a container
 For example, to connect with an app from a localhost https://0.0.0.0 should suffice.  
 
 ## Demo
-Furthermore, Dockerfile creates two users to demonstrate ability of flask app to restrict view for a given user. Using app/setup.sh script it creates single credit file `credits/1.txt` and sets ownership to `root` user.  When logging with following credentials one can look up some credit files, since root user is an owner of 1.txt file: 
+Furthermore, Dockerfile creates two users to demonstrate webapp ability to restrict view for a given user to view files they own. Using app/setup.sh script it creates two credit files `credits/1.txt`, `credits/2.txt` and sets ownership to `root` user for the first one and for the second one to user called `test`.  When logging with following credentials one can look up `credits/1.txt` contents, since root user is an owner of this file: 
 ```
 username: root
 password: password
@@ -50,7 +50,7 @@ However, when using credentials of the seconder user:
 username: test
 password: pass
 ```
-Contents of `credits/1.txt` will not be displayed. 
+Contents of `credits/1.txt` will not be displayed and it will only show the insides of the `credits/2.txt` file. 
 
 ## Firewall 
 In order to apply firewall rules using nft run following command with root privileges: 
