@@ -1,10 +1,5 @@
 #!bin/bash
 
-# setup demo users and their credentials
-RUN useradd test
-RUN echo 'root:password' | chpasswd
-RUN echo 'test:pass' | chpasswd
-
 # demo account
 text="this is line one\n
 this is line two\n

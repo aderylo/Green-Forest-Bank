@@ -10,6 +10,12 @@ RUN pip3 install -r requirements.txt
 # Create a directory for the ssh server to store its host keys
 RUN mkdir /var/run/sshd
 
+# setup demo users and their credentials
+RUN useradd test
+RUN echo 'root:password' | chpasswd
+RUN echo 'test:pass' | chpasswd
+
+# setup demo files
 RUN bash setup.sh 
 
 # Allow root login via ssh 
