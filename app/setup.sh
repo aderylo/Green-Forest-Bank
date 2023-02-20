@@ -10,3 +10,4 @@ mkdir credits
 mkdir deposits
 
 echo $text > credits/1.txt
+chmod 600 credits/1.txt

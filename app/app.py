@@ -1,6 +1,6 @@
 from pam import pam
-from flask import Flask, request, jsonify, render_template, redirect
-import os
+from flask import Flask, request, session, jsonify, render_template, redirect
+import os, pwd
 import logging
 
 app = Flask(__name__)
@@ -19,6 +19,7 @@ def login():
 
     # authenticate using PAM
     if pam().authenticate(username, password):
+        session['username'] = request.form['username']
         return redirect('/view')
     else:
         return jsonify({"status": "failure"}), 401
@@ -36,14 +37,24 @@ def deposits():
     return viewer("deposits")
 
 def viewer(directory : str):
-    filenames = os.listdir(directory)
+    all_filenames = os.listdir(directory)
+    print("whoamiI")
+    os.system("whoami")
+    user = session["username"]
+    filenames = []
     file_contents = {}
 
-    for filename in filenames:
-        with open(os.path.join(directory, filename)) as f:
-            file_contents[filename] = f.readlines()
+    for filename in all_filenames:
+        path = f"{directory}/{filename}"
+        if os.stat(path).st_uid == pwd.getpwnam(user).pw_uid:
+            filenames.append(filename)
+            with open(os.path.join(directory, filename),) as f:
+                file_contents[filename] = f.readlines() 
 
     return render_template('viewer.html', filenames=filenames, file_contents=file_contents)
+
+# really secret key, in production we would use a secret manager
+app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
